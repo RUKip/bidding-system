@@ -1,0 +1,13 @@
+version: "3"
+services:
+  frontend:
+    image: grkip/bidding-frontend:latest
+    deploy:
+      replicas: 1
+    ports:
+      - "80:80"
+  backend:
+    image: grkip/bidding-system:latest
+    user: "root"
+    ports:
+      - "9000:9000"
