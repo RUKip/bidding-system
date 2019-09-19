@@ -15,6 +15,7 @@ import { ProductListComponent } from './product-list/product-list.component';
     BrowserModule,
     HttpClientModule,
     RouterModule.forRoot([
+      { path: '', component: ProductListComponent },
       ])
   ],
   providers: [],
