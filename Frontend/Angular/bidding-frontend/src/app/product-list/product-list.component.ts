@@ -17,10 +17,11 @@ export class ProductListComponent implements OnInit {
 
   getProducts() {
     this.productsSerivce.requestProducts()
-      .subscribe((data: JSON) => this.products.push({
-        productName: data['name'],
-        productDescription:  data['description']
+      .subscribe((data: Response) => this.products.push({
+        productName: data.json()['name'],
+        productDescription:  data.json()['description']
       }));
+    console.log(this.products);
   }
 
 }
