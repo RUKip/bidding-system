@@ -9,6 +9,6 @@ export class ProductsService {
   constructor(private http: HttpClient) { }
 
   requestProducts() {
-    return this.http.get('backend:9000/products/get');
+    return this.http.get('http://backend:9000/products/get'); //does work with localhost...
   }
 }
