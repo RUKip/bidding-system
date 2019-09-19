@@ -22,4 +22,8 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     Ok("This is text send from the backend")
     //Ok(views.html.index())
   }
+
+  def mongocall(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+
+  }
 }

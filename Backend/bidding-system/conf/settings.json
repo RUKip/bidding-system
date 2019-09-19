@@ -1,0 +1,9 @@
+{
+  "locations":
+  {
+    "frontend" : "frontend",
+    "backend" : "backend",
+    "mongodb" : "mongodb://mongo",
+    "cassandra" : "cassandra"
+  }
+}
