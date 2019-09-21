@@ -1,15 +1,18 @@
-<h2>Products: </h2>
-<div *ngFor="let product of products">
+<div>
+  <button type="button" class="btn btn-primary"
+           (click)="getProducts()">
+   Show me products!
+  </button>
+  <h2>Products: </h2>
+  <div *ngFor="let product of products">
 
-  <h3>
-    {{ product }}
-    {{ product.name }}
-  </h3>
+    <h3>
+      {{ product }}
+      {{ product.name }}
+    </h3>
 
-  <!--  <button (click)="bid(product.id, )">-->
-  <!--  Bid-->
-  <!--  </button>-->
+    <!--  <button (click)="bid(product.id, )">-->
+    <!--  Bid-->
+    <!--  </button>-->
+  </div>
 </div>
-<button (click)="getProducts()">
-  Get products
-</button>
