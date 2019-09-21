@@ -7,8 +7,7 @@
   <div *ngFor="let product of products">
 
     <h3>
-      {{ product }}
-      {{ product.name }}
+      <a [routerLink]="['/product', product.id]">{{ product }} - {{ product.name }} </a>
     </h3>
 
     <!--  <button (click)="bid(product.id, )">-->

@@ -10,13 +10,15 @@ import { MainComponent } from './main/main.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { ProductComponent } from './product/product.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ProductListComponent,
     AdminComponent,
-    MainComponent
+    MainComponent,
+    ProductComponent
   ],
   imports: [
     BrowserModule,
@@ -24,6 +26,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     RouterModule.forRoot([
       { path: '', component: MainComponent },
       { path: 'admin', component: AdminComponent },
+      { path: 'product/:productId', component: ProductComponent },
       ]),
     BsDropdownModule.forRoot(),
     TooltipModule.forRoot(),
