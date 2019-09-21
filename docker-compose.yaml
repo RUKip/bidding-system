@@ -9,5 +9,3 @@ services:
   backend:
     image: grkip/bidding-system:latest
     user: "root"
-    ports:
-      - "9000:9000"
