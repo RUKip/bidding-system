@@ -11,8 +11,4 @@ export class MainComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  bid(productId, price) {
-    // Send request!
-  }
 }

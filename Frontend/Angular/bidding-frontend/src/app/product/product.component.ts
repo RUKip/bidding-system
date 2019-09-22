@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import {ProductService} from '../product.service';
+import {Product} from '../product';
 
 @Component({
   selector: 'app-product',
@@ -8,13 +10,26 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class ProductComponent implements OnInit {
   bids = [];
-  constructor(private route: ActivatedRoute) { }
+  productId;
+  product;
+  constructor(private route: ActivatedRoute, private productSerivce: ProductService) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      const productId = +params.get('productId');
-      //get Bids by id on start
+      this.productId = +params.get('productId');
     });
+
+    this.productSerivce.getProductData(this.productId)
+      .subscribe((data: Object) => {
+        this.product = {
+            id: data['id'],
+            name: data['name'],
+            description: data['description']
+        };
+      });
+
+    //TODO: get Bids by id on start, from the web socket
+
   }
 
 }

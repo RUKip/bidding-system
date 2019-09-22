@@ -5,8 +5,6 @@ import play.api._
 import play.api.mvc._
 import play.api.libs.json._
 
-import scala.util.parsing.json.{JSONArray, JSONObject}
-
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
@@ -30,15 +28,38 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
 //
 //  }
 
-  def test(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+  def getProducts(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val json : JsValue = Json.obj(
        "products" -> Json.arr(
          Json.obj(
-           "id"-> 0,
+           "id"-> 1,
            "name" -> "mysterybox",
            "description" -> "What could be in the box??"
-         ))
+         ),
+         Json.obj(
+           "id"-> 2,
+           "name" -> "magic 8 ball",
+           "description" -> "it will tell your future"
+        ))
        )
+    Ok(json)
+  }
+
+  def getProduct(id: Int): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    var json: JsValue
+    if(id == 1) {
+      json = Json.obj(
+        "id" -> id,
+        "name" -> "mysterybox",
+        "description" -> "What could be in the box??"
+      )
+    }else{
+      json = Json.obj(
+        "id"-> id,
+        "name" -> "magic 8 ball",
+        "description" -> "it will tell your future"
+      )
+    }
     Ok(json)
   }
 }
