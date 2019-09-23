@@ -11,12 +11,21 @@ Running the sepearate tiers can be done by pulling them from grkip/<image_name>.
 
 ### Front-end (Angular/Nginx)
 
+#### Settings
+The settings file is located in the file settings.ts and can be accessed by importing the settings class.
+
 #### Running locally
 To run your front-end locally run in your main Angular app folder: ``ng serve``
 This will run your front-end on localhost:4200, auto updating if any changes are applied.
 To only build once use: ``ng build``
 
 ### Back-end (Scala/Play)
+
+#### Settings
+The settings can be found in the settings.json.
+
+#### Running locally
+A container will be generated for you with ``sbt docker:publishLocal``. The container has to be run with user root e.g. ``docker run -u root bidding-system:1.0-SNAPSHOT``
 
 ### Databases (MongoDB/Cassandra)
 
