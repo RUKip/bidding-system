@@ -1,0 +1,17 @@
+version: "3"
+services:
+  frontend:
+    image: grkip/bidding-frontend:latest
+    deploy:
+      replicas: 1
+    ports:
+      - "80:80"
+  backend:
+    image: grkip/bidding-system:latest
+    user: "root"
+  mongoDB:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+ 

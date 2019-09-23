@@ -3,6 +3,7 @@ package controllers
 import javax.inject._
 import play.api._
 import play.api.mvc._
+import play.api.libs.json._
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -19,6 +20,46 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
    * a path of `/`.
    */
   def index() = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.index())
+    Ok("This is text send from the backend")
+    //Ok(views.html.index())
+  }
+
+//  def mongocall(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+//
+//  }
+
+  def getProducts(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    val json : JsValue = Json.obj(
+       "products" -> Json.arr(
+         Json.obj(
+           "id"-> 1,
+           "name" -> "mysterybox",
+           "description" -> "What could be in the box??"
+         ),
+         Json.obj(
+           "id"-> 2,
+           "name" -> "magic 8 ball",
+           "description" -> "it will tell your future"
+        ))
+       )
+    Ok(json)
+  }
+
+  def getProduct(id: Int): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    var json: JsValue
+    if(id == 1) {
+      json = Json.obj(
+        "id" -> id,
+        "name" -> "mysterybox",
+        "description" -> "What could be in the box??"
+      )
+    }else{
+      json = Json.obj(
+        "id"-> id,
+        "name" -> "magic 8 ball",
+        "description" -> "it will tell your future"
+      )
+    }
+    Ok(json)
   }
 }
