@@ -11,7 +11,7 @@ import {Product} from '../product';
 export class ProductComponent implements OnInit {
   bids = [];
   productId;
-  product;
+  product: Product;
   constructor(private route: ActivatedRoute, private productSerivce: ProductService) { }
 
   ngOnInit() {

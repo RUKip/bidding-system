@@ -1,3 +1,5 @@
+package database
+
 import org.mongodb.scala.{Document, MongoClient, MongoCollection, MongoDatabase}
 
 class DatabaseHandler {

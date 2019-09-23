@@ -4,6 +4,7 @@ import javax.inject._
 import play.api._
 import play.api.mvc._
 import play.api.libs.json._
+import database.DatabaseHandler
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -24,10 +25,6 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     //Ok(views.html.index())
   }
 
-//  def mongocall(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-//
-//  }
-
   def getProducts(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val json : JsValue = Json.obj(
        "products" -> Json.arr(
@@ -45,8 +42,9 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     Ok(json)
   }
 
-  def getProduct(id: Int): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    var json: JsValue
+  def getProduct(id_string : String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    var json: JsValue = null
+    val id = id_string.toInt;
     if(id == 1) {
       json = Json.obj(
         "id" -> id,
@@ -60,6 +58,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
         "description" -> "it will tell your future"
       )
     }
+    val databaseHandler: DatabaseHandler = new DatabaseHandler();
     Ok(json)
   }
 }
