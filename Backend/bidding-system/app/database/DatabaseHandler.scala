@@ -1,14 +1,28 @@
 package database
 
-import org.mongodb.scala.{Document, MongoClient, MongoCollection, MongoDatabase}
+import org.mongodb.scala.bson.conversions.Bson
+import org.mongodb.scala.{Document, MongoClient, MongoCollection, MongoDatabase, Observer}
+import play.api.libs.json.{JsValue, Json}
 
-class DatabaseHandler {
-  val mongoClient : MongoClient = MongoClient("mongodb://mongo")
-  val database : MongoDatabase = mongoClient.getDatabase("bidding-system")
-  val product_collection : MongoCollection[Document] = database.getCollection("products");
+import scala.io.Source
 
-  def handle(){
+class DatabaseHandler(){
 
+  private val bufferedSource = Source.fromFile("../conf/settings.json")
+  private val settings = Json.parse(bufferedSource.getLines.mkString)
+  bufferedSource.close
+
+  val mongoClient : MongoClient = MongoClient((settings("mongodb_client")).as[String])
+  val database : MongoDatabase = mongoClient.getDatabase((settings("mongodb_database")).as[String])
+  val product_collection : MongoCollection[Document] = database.getCollection((settings("mongodb_collection_products")).as[String])
+
+  def get(filter : Bson) : JsValue = {
+    val result = product_collection.find(filter)
+    Json.parse(result.toString)
+  }
+
+  def delete(filter : Bson){
+    product_collection.deleteMany(filter)
   }
 
   def init(){

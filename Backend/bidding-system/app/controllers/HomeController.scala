@@ -4,7 +4,7 @@ import javax.inject._
 import play.api._
 import play.api.mvc._
 import play.api.libs.json._
-import database.DatabaseHandler
+import database.{DatabaseHandler, DatabaseUtils}
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -44,21 +44,23 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
 
   def getProduct(id_string : String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     var json: JsValue = null
-    val id = id_string.toInt;
-    if(id == 1) {
-      json = Json.obj(
-        "id" -> id,
-        "name" -> "mysterybox",
-        "description" -> "What could be in the box??"
-      )
-    }else{
-      json = Json.obj(
-        "id"-> id,
-        "name" -> "magic 8 ball",
-        "description" -> "it will tell your future"
-      )
-    }
+//    val id = id_string.toInt;
+//    if(id == 1) {
+//      json = Json.obj(
+//        "id" -> id,
+//        "name" -> "mysterybox",
+//        "description" -> "What could be in the box??"
+//      )
+//    }else{
+//      json = Json.obj(
+//        "id"-> id,
+//        "name" -> "magic 8 ball",
+//        "description" -> "it will tell your future"
+//      )
+//    }
     val databaseHandler: DatabaseHandler = new DatabaseHandler();
+    databaseHandler.init()
+    json = databaseHandler.get(DatabaseUtils.createAndFilter(Map("id" -> id_string)))
     Ok(json)
   }
 }

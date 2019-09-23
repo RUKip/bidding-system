@@ -3,7 +3,9 @@
   {
     "frontend" : "frontend",
     "backend" : "backend",
-    "mongodb" : "mongodb://mongo",
+    "mongodb_client" : "mongodb://mongo",
+    "mongodb_database" : "bidding-system",
+    "mongodb_collection_products" : "products",
     "cassandra" : "cassandra"
   }
 }
