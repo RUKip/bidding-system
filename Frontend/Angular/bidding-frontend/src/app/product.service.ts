@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Settings} from './settings';
-import {concat} from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Settings } from './settings';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +17,8 @@ export class ProductService {
 
   getProductData(id) {
     const params = new HttpParams().set('id', id);
-      return this.http.get(concat(this.settings.defaultUrl, '/api/product/${id}'), {responseType: 'json', params});
+    const url: string = 'http://' + this.settings.defaultUrl + '/api/product/${id}';
+    return this.http.get(url, {responseType: 'json', params});
   }
 
   bid(productId, price) {

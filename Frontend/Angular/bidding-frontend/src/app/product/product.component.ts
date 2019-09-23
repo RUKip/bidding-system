@@ -16,11 +16,13 @@ export class ProductComponent implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      this.productId = +params.get('productId');
+      this.productId = params.get('productId');
+      console.log(this.productId);
     });
 
     this.productSerivce.getProductData(this.productId)
       .subscribe((data: Object) => {
+        console.log(data);
         this.product = {
             id: data['id'],
             name: data['name'],

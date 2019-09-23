@@ -11,6 +11,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ProductComponent } from './product/product.component';
+import {ProductService} from './product.service';
+import {ProductsService} from './products.service';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,7 @@ import { ProductComponent } from './product/product.component';
     ProductListComponent,
     AdminComponent,
     MainComponent,
-    ProductComponent
+    ProductComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,7 +34,10 @@ import { ProductComponent } from './product/product.component';
     TooltipModule.forRoot(),
     ModalModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    ProductService,
+    ProductsService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

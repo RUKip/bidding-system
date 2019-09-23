@@ -1,3 +1,3 @@
 export class Settings {
-  defaultUrl: string = window.location.host;
+  defaultUrl: string = window.location.hostname;
 }
