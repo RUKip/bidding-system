@@ -5,20 +5,20 @@ An auction system for various products. Using a 3-tier architecture.
 
 
 ## Installation
-
+Running the sepearate tiers can be done by pulling them from grkip/<image_name>. All tiers can also be run by ``docker-compose up`` from the top level folder in this project. (all that are implemented at least)
 
 ## Help
 
-### Front-end
+### Front-end (Angular/Nginx)
 
 #### Running locally
 To run your front-end locally run in your main Angular app folder: ``ng serve``
 This will run your front-end on localhost:4200, auto updating if any changes are applied.
 To only build once use: ``ng build``
 
-### Back-end
+### Back-end (Scala/Play)
 
-### Databases
+### Databases (MongoDB/Cassandra)
 
 ### Docker
 
