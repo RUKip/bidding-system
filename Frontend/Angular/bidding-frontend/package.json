@@ -22,8 +22,10 @@
     "@angular/router": "^6.1.0",
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
+    "express": "^4.15.2",
     "ngx-bootstrap": "^5.1.2",
     "rxjs": "~6.2.0",
+    "socket.io": "^2.3.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
@@ -31,6 +33,7 @@
     "@angular/cli": "~6.2.3",
     "@angular/compiler-cli": "^6.1.0",
     "@angular/language-service": "^6.1.0",
+    "@types/angular": "^1.6.56",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",

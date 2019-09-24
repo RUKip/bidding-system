@@ -9,9 +9,6 @@ services:
   backend:
     image: grkip/bidding-system:latest
     user: "root"
-  mongoDB:
+  mongo:
     image: mongo:latest
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
  

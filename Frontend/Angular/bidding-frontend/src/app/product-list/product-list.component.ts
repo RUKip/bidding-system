@@ -19,7 +19,7 @@ export class ProductListComponent implements OnInit {
   getProducts() {
     this.productsSerivce.requestProducts()
       .subscribe((data: Object) => {
-          this.products = []
+          this.products = [];
           console.log(data);
           for (const entry of data['products']) {
             const product: Product = {

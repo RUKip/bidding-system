@@ -11,7 +11,7 @@ import database.{DatabaseHandler, DatabaseUtils}
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class HomeController @Inject()(config: Configuration, cc: ControllerComponents) extends AbstractController(cc) {
 
   /**
    * Create an Action to render an HTML page.
@@ -26,19 +26,22 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
   }
 
   def getProducts(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val json : JsValue = Json.obj(
-       "products" -> Json.arr(
-         Json.obj(
-           "id"-> 1,
-           "name" -> "mysterybox",
-           "description" -> "What could be in the box??"
-         ),
-         Json.obj(
-           "id"-> 2,
-           "name" -> "magic 8 ball",
-           "description" -> "it will tell your future"
-        ))
-       )
+//    val json : JsValue = Json.obj(
+//       "products" -> Json.arr(
+//         Json.obj(
+//           "id"-> 1,
+//           "name" -> "mysterybox",
+//           "description" -> "What could be in the box??"
+//         ),
+//         Json.obj(
+//           "id"-> 2,
+//           "name" -> "magic 8 ball",
+//           "description" -> "it will tell your future"
+//        ))
+//       )
+    val databaseHandler: DatabaseHandler = new DatabaseHandler(config);
+    databaseHandler.init()
+    val json = databaseHandler.get(DatabaseUtils.createAndFilter(Map("keywords" -> "magic")))
     Ok(json)
   }
 
@@ -58,7 +61,7 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
 //        "description" -> "it will tell your future"
 //      )
 //    }
-    val databaseHandler: DatabaseHandler = new DatabaseHandler();
+    val databaseHandler: DatabaseHandler = new DatabaseHandler(config);
     databaseHandler.init()
     json = databaseHandler.get(DatabaseUtils.createAndFilter(Map("id" -> id_string)))
     Ok(json)
