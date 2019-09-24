@@ -5,6 +5,7 @@ import play.api._
 import play.api.mvc._
 import play.api.libs.json._
 import database.{DatabaseHandler, DatabaseUtils}
+import org.mongodb.scala.model.Filters._
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -29,7 +30,7 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
 //    val json : JsValue = Json.obj(
 //       "products" -> Json.arr(
 //         Json.obj(
-//           "id"-> 1,
+//           "id"-> 1,S
 //           "name" -> "mysterybox",
 //           "description" -> "What could be in the box??"
 //         ),
@@ -41,7 +42,7 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
 //       )
     val databaseHandler: DatabaseHandler = new DatabaseHandler(config);
     databaseHandler.init()
-    val json = databaseHandler.get(DatabaseUtils.createAndFilter(Map("keywords" -> "magic")))
+    val json = databaseHandler.get(null)
     Ok(json)
   }
 

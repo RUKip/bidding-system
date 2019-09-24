@@ -22,17 +22,32 @@ class DatabaseHandler (config: Configuration){
   def get(filter : Bson) : JsValue = {
     this.connect()
 
-    val result : FindObservable[Document] = product_collection.find(filter)
+    //TODO: filter does not work yet correctly
+
+    var json_string : String = "["
+    val result: FindObservable[Document] = {
+      if(filter == null) {
+        product_collection.find()
+      }else {
+        product_collection.find(filter)
+      }
+    }
+
+    //Wait for response to return
     val documents = Await.result(result.toFuture(), Duration(MAX_WAIT_TIME, TimeUnit.SECONDS))
+    println(documents) //TODO: remove
+    for (doc <- documents) {
+      if (json_string == "[") {
+        json_string += doc.toJson()
+      }else {
+        json_string += "," + doc.toJson()
+      }
+    }
+    json_string += "]"
 
     mongoClient.close()
-    if (documents != null && documents.nonEmpty && documents.head.nonEmpty) {
-      println(documents.toString())
-      Json.parse(documents.toString())
-    }else{
-      println("documents was empty")
-      Json.parse("{}")
-    }
+    println("Returning json: " + json_string)
+    Json.parse(json_string)
   }
 
   def delete(filter : Bson): Unit = {
@@ -42,30 +57,33 @@ class DatabaseHandler (config: Configuration){
   }
 
   def init(): Unit = {
-    try {
-      val future: Future[Any] = Future {
-        this.connect()
-        println(config.get[String]("mongodb_client_location"))
-          if (product_collection.countDocuments() == 0) {
-            product_collection.insertMany(Array(
-              Document("_id" -> 1, "name" -> "magic 8 ball", "description" -> "it will tell your future", "keywords" -> "magic"),
-              Document("_id" -> 2, "name" -> "mysterybox", "description" -> "What could be in the box??", "keywords" -> "magic")
-            )).subscribe(new Observer[Completed]() {
-              override def onNext(result: Completed): Unit = println("Inserted product successfully")
+    val future: Future[Any] = Future {
+      this.connect()
+      println(config.get[String]("mongodb_client_location"))
 
-              override def onError(e: Throwable): Unit = {
-                println("error on init: " + e.getMessage)
-                mongoClient.close()
-              }
+      val doc_count = Await.result(product_collection.countDocuments().toFuture(), Duration(MAX_WAIT_TIME, TimeUnit.SECONDS));
+      println(doc_count)
+      if (doc_count == 0) {
+          product_collection.insertMany(Array(
+          Document("_id" -> 1, "name" -> "magic 8 ball", "description" -> "it will tell your future", "keywords" -> "magic"),
+          Document("_id" -> 2, "name" -> "mysterybox", "description" -> "What could be in the box??", "keywords" -> "magic")
+        )).subscribe(new Observer[Completed]() {
+          override def onNext(result: Completed): Unit = println("Inserted product successfully")
 
-              override def onComplete(): Unit = mongoClient.close()
-            })
+          override def onError(e: Throwable): Unit = {
+            println("error on init: " + e.getMessage)
+            mongoClient.close()
           }
+
+          override def onComplete(): Unit = mongoClient.close()
+        })
+      }else{
+        println("Collection already contains documents")
       }
-      Await.result(future, Duration(MAX_WAIT_TIME, TimeUnit.SECONDS));
-    } catch {
-      case ex: Exception => ex.getMessage()
     }
+    val result = Await.result(future, Duration(MAX_WAIT_TIME, TimeUnit.SECONDS));
+    mongoClient.close()
+    result
   }
 
   private def connect(): Unit =
