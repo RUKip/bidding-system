@@ -19,17 +19,18 @@ export class ProductComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.productId = params.get('productId');
       console.log(this.productId);
-    });
 
-    this.productSerivce.getProductData(this.productId)
-      .subscribe((data: Object) => {
-        console.log(data);
-        this.product = {
+      this.productSerivce.getProductData(this.productId)
+        .subscribe((data: JSON) => {
+          console.log(data);
+          this.product = {
             id: data['id'],
             name: data['name'],
             description: data['description']
-        };
-      });
+          };
+        });
+    });
+
 
     //TODO: get Bids by id on start, from the web socket
 

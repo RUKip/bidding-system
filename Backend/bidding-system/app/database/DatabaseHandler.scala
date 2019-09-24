@@ -59,10 +59,7 @@ class DatabaseHandler (config: Configuration){
   def init(): Unit = {
     val future: Future[Any] = Future {
       this.connect()
-      println(config.get[String]("mongodb_client_location"))
-
       val doc_count = Await.result(product_collection.countDocuments().toFuture(), Duration(MAX_WAIT_TIME, TimeUnit.SECONDS));
-      println(doc_count)
       if (doc_count == 0) {
           product_collection.insertMany(Array(
           Document("_id" -> 1, "name" -> "magic 8 ball", "description" -> "it will tell your future", "keywords" -> "magic"),

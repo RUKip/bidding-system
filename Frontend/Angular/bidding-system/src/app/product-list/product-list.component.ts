@@ -24,7 +24,7 @@ export class ProductListComponent implements OnInit {
 
           data.forEach(element => {
             const product: Product = {
-              id: element['id'],
+              id: element['_id'],
               name: element['name'],
               description: element['description']
             };

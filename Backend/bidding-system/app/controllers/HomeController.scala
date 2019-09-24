@@ -64,7 +64,7 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
 //    }
     val databaseHandler: DatabaseHandler = new DatabaseHandler(config);
     databaseHandler.init()
-    json = databaseHandler.get(DatabaseUtils.createAndFilter(Map("id" -> id_string)))
+    json = databaseHandler.get(equal("id", id_string))
     Ok(json)
   }
 }
