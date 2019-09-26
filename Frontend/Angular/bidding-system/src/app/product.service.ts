@@ -15,8 +15,8 @@ export class ProductService {
 
   getProductData(id: string) {
     const params = new HttpParams().set('id', id);
-    const url: string = 'http://' + this.settings.defaultUrl + '/api/product/${id}';
-    return this.http.get(url, {responseType: 'json', params});
+    const url: string = 'http://' + this.settings.defaultUrl + '/api/product/' + id;
+    return this.http.get(url);
   }
 
   bid(productId, price) {

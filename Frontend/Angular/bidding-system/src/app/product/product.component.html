@@ -1,5 +1,7 @@
 <div>
-  <h1>{{ product.name }}</h1>
+  <div *ngIf="product">
+    <h1>{{ product.name }}</h1>
+  </div>
 
   <h3>Latest bids:</h3>
   <ul>

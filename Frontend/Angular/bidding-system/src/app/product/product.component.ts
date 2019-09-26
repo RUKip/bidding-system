@@ -23,10 +23,11 @@ export class ProductComponent implements OnInit {
       this.productSerivce.getProductData(this.productId)
         .subscribe((data: JSON) => {
           console.log(data);
+          const element = data[0];
           this.product = {
-            id: data['id'],
-            name: data['name'],
-            description: data['description']
+            id: element['id'],
+            name: element['name'],
+            description: element['description']
           };
         });
     });

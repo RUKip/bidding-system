@@ -27,19 +27,6 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
   }
 
   def getProducts(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-//    val json : JsValue = Json.obj(
-//       "products" -> Json.arr(
-//         Json.obj(
-//           "id"-> 1,S
-//           "name" -> "mysterybox",
-//           "description" -> "What could be in the box??"
-//         ),
-//         Json.obj(
-//           "id"-> 2,
-//           "name" -> "magic 8 ball",
-//           "description" -> "it will tell your future"
-//        ))
-//       )
     val databaseHandler: DatabaseHandler = new DatabaseHandler(config);
     databaseHandler.init()
     val json = databaseHandler.get(null)
@@ -48,23 +35,8 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
 
   def getProduct(id_string : String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     var json: JsValue = null
-//    val id = id_string.toInt;
-//    if(id == 1) {
-//      json = Json.obj(
-//        "id" -> id,
-//        "name" -> "mysterybox",
-//        "description" -> "What could be in the box??"
-//      )
-//    }else{
-//      json = Json.obj(
-//        "id"-> id,
-//        "name" -> "magic 8 ball",
-//        "description" -> "it will tell your future"
-//      )
-//    }
     val databaseHandler: DatabaseHandler = new DatabaseHandler(config);
-    databaseHandler.init()
-    json = databaseHandler.get(equal("id", id_string))
+    json = databaseHandler.get(equal("_id", id_string.toInt))
     Ok(json)
   }
 }
