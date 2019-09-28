@@ -4,13 +4,15 @@ import javax.inject._
 import play.api._
 import play.api.mvc._
 import play.api.libs.json._
+import database.{DatabaseHandler, DatabaseUtils}
+import org.mongodb.scala.model.Filters._
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class HomeController @Inject()(config: Configuration, cc: ControllerComponents) extends AbstractController(cc) {
 
   /**
    * Create an Action to render an HTML page.
@@ -24,42 +26,17 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     //Ok(views.html.index())
   }
 
-//  def mongocall(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-//
-//  }
-
   def getProducts(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val json : JsValue = Json.obj(
-       "products" -> Json.arr(
-         Json.obj(
-           "id"-> 1,
-           "name" -> "mysterybox",
-           "description" -> "What could be in the box??"
-         ),
-         Json.obj(
-           "id"-> 2,
-           "name" -> "magic 8 ball",
-           "description" -> "it will tell your future"
-        ))
-       )
+    val databaseHandler: DatabaseHandler = new DatabaseHandler(config);
+    databaseHandler.init()
+    val json = databaseHandler.get(null)
     Ok(json)
   }
 
-  def getProduct(id: Int): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    var json: JsValue
-    if(id == 1) {
-      json = Json.obj(
-        "id" -> id,
-        "name" -> "mysterybox",
-        "description" -> "What could be in the box??"
-      )
-    }else{
-      json = Json.obj(
-        "id"-> id,
-        "name" -> "magic 8 ball",
-        "description" -> "it will tell your future"
-      )
-    }
+  def getProduct(id_string : String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    var json: JsValue = null
+    val databaseHandler: DatabaseHandler = new DatabaseHandler(config);
+    json = databaseHandler.get(equal("_id", id_string.toInt))
     Ok(json)
   }
 }

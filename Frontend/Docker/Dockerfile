@@ -1,7 +1,7 @@
 #Node/angular build
 FROM node:latest as builder
 COPY Angular .
-WORKDIR bidding-frontend
+WORKDIR bidding-system
 RUN npm install -g @angular/cli
 RUN ng build
 
@@ -9,7 +9,7 @@ RUN ng build
 FROM nginx:latest
 COPY Nginx/nginx.conf /etc/nginx/nginx.conf
 RUN rm -rf /usr/share/nginx/html/*
-COPY --from=builder /bidding-frontend/dist/bidding-frontend /usr/share/nginx/html
+COPY --from=builder /bidding-system/dist/bidding-system /usr/share/nginx/html
 
 EXPOSE 80
 
