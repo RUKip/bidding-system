@@ -22,8 +22,6 @@ class DatabaseHandler (config: Configuration){
   def get(filter : Bson) : JsValue = {
     this.connect()
 
-    //TODO: filter does not work yet correctly
-
     var json_string : String = "["
     val result: FindObservable[Document] = {
       if(filter == null) {
@@ -54,6 +52,24 @@ class DatabaseHandler (config: Configuration){
     this.connect()
     product_collection.deleteMany(filter)
     mongoClient.close()
+  }
+
+  def add(json: String): Boolean = {
+    //TODO: implement
+    val document: Document = Document(json)
+    this.connect()
+    product_collection.insertOne(document).subscribe(new Observer[Completed]() {
+      override def onError(e: Throwable): Boolean = {
+        println("error on init: " + e.getMessage)
+        mongoClient.close()
+        false
+      }
+
+      override def onComplete(): Boolean = {
+        mongoClient.close()
+        true
+      }
+    })
   }
 
   def init(): Unit = {

@@ -27,16 +27,24 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
   }
 
   def getProducts(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    val databaseHandler: DatabaseHandler = new DatabaseHandler(config);
+    val databaseHandler: DatabaseHandler = new DatabaseHandler(config)
     databaseHandler.init()
     val json = databaseHandler.get(null)
     Ok(json)
   }
 
   def getProduct(id_string : String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    var json: JsValue = null
-    val databaseHandler: DatabaseHandler = new DatabaseHandler(config);
-    json = databaseHandler.get(equal("_id", id_string.toInt))
+    val databaseHandler: DatabaseHandler = new DatabaseHandler(config)
+    val json: JsValue = databaseHandler.get(equal("_id", id_string.toInt))
     Ok(json)
+  }
+
+  def addProduct(product : String):  Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    val databaseHandler: DatabaseHandler = new DatabaseHandler(config)
+    if(databaseHandler.add(product)) {
+      Ok()
+    }else{
+      NotModified
+    }
   }
 }
