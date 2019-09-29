@@ -54,22 +54,10 @@ class DatabaseHandler (config: Configuration){
     mongoClient.close()
   }
 
-  def add(json: String): Boolean = {
-    //TODO: implement
+  def add(json: String): Unit = {
     val document: Document = Document(json)
     this.connect()
-    product_collection.insertOne(document).subscribe(new Observer[Completed]() {
-      override def onError(e: Throwable): Boolean = {
-        println("error on init: " + e.getMessage)
-        mongoClient.close()
-        false
-      }
-
-      override def onComplete(): Boolean = {
-        mongoClient.close()
-        true
-      }
-    })
+    product_collection.insertOne(document).toFuture()
   }
 
   def init(): Unit = {

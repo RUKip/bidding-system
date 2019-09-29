@@ -13,6 +13,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { ProductComponent } from './product/product.component';
 import {ProductService} from './product.service';
 import {ProductsService} from './products.service';
+import { SellComponent } from './sell/sell.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,14 +23,17 @@ import {ProductsService} from './products.service';
     AdminComponent,
     MainComponent,
     ProductComponent,
+    SellComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    ReactiveFormsModule,
     RouterModule.forRoot([
       { path: '', component: MainComponent },
       { path: 'admin', component: AdminComponent },
       { path: 'product/:productId', component: ProductComponent },
+      { path: 'sell', component: SellComponent},
       ]),
     BsDropdownModule.forRoot(),
     TooltipModule.forRoot(),

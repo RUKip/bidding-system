@@ -19,6 +19,11 @@ export class ProductService {
     return this.http.get(url);
   }
 
+  createProduct(product: string) {
+    const url: string = 'http://' + this.settings.defaultUrl + '/api/product/' + product;
+    return this.http.post(url);
+  }
+
   bid(productId, price) {
     // Send request!
   }

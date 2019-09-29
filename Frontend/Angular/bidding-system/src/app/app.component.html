@@ -8,12 +8,16 @@
           <button [routerLink]="['/']" type="button" class="btn btn-primary">
             Home
           </button>
+          <button [routerLink]="['/admin']" type="button" class="btn btn-primary"
+                  tooltip="Play god with containers">
+            Admin panel
+          </button>
+          <button [routerLink]="['/sell']" type="button" class="btn btn-primary"
+                  tooltip="Offer your own product">
+            Sell
+          </button>
         </div>
       </div>
-      <button [routerLink]="['/admin']" type="button" class="btn btn-primary"
-              tooltip="Play god with containers">
-        Admin panel
-      </button>
     </div>
   </nav>
   <router-outlet></router-outlet>

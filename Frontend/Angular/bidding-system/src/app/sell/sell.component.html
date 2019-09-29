@@ -1,0 +1,19 @@
+<div style="text-align:center">
+  <h1>Your product details</h1>
+  <form [formGroup]="sellForm" (ngSubmit)="onSubmit(sellForm.value)">
+    <div>
+      <label for="name">
+        Name
+      </label>
+      <input id="name" type="text" formControlName="name">
+    </div>
+    <div>
+      <label for="description">
+        Description
+      </label>
+      <input id="description" type="text" formControlName="description">
+    </div>
+  <button class="button" type="submit">Submit product</button>
+
+</form>
+</div>
