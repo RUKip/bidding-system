@@ -5,6 +5,7 @@ import play.api._
 import play.api.mvc._
 import play.api.libs.json._
 import database.{DatabaseHandler, DatabaseUtils}
+import org.mongodb.scala.bson.ObjectId
 import org.mongodb.scala.model.Filters._
 
 /**
@@ -35,7 +36,8 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
 
   def getProduct(id_string : String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val databaseHandler: DatabaseHandler = new DatabaseHandler(config)
-    val json: JsValue = databaseHandler.get(equal("_id", id_string.toInt))
+    val objectId = new ObjectId(id_string)
+    val json: JsValue = databaseHandler.get(equal("_id", objectId))
     Ok(json)
   }
 

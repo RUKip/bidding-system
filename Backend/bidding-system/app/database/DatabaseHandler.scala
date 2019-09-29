@@ -66,8 +66,8 @@ class DatabaseHandler (config: Configuration){
       val doc_count = Await.result(product_collection.countDocuments().toFuture(), Duration(MAX_WAIT_TIME, TimeUnit.SECONDS));
       if (doc_count == 0) {
           product_collection.insertMany(Array(
-          Document("_id" -> 1, "name" -> "magic 8 ball", "description" -> "it will tell your future", "keywords" -> "magic"),
-          Document("_id" -> 2, "name" -> "mysterybox", "description" -> "What could be in the box??", "keywords" -> "magic")
+          Document("name" -> "magic 8 ball", "description" -> "it will tell your future", "keywords" -> "magic"),
+          Document("name" -> "mysterybox", "description" -> "What could be in the box??", "keywords" -> "magic")
         )).subscribe(new Observer[Completed]() {
           override def onNext(result: Completed): Unit = println("Inserted product successfully")
 

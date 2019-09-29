@@ -25,7 +25,7 @@ export class ProductComponent implements OnInit {
           console.log(data);
           const element = data[0];
           this.product = {
-            id: element['id'],
+            id: element['_id']['$oid'],
             name: element['name'],
             description: element['description']
           };
