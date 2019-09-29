@@ -42,6 +42,6 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
   def addProduct(product : String):  Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     val databaseHandler: DatabaseHandler = new DatabaseHandler(config)
     databaseHandler.add(product)
-    Ok()
+    Ok
   }
 }
