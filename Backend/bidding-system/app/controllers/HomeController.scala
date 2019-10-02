@@ -3,10 +3,12 @@ package controllers
 import javax.inject._
 import play.api._
 import play.api.mvc._
-import play.api.libs.json._
 import database.{DatabaseHandler, DatabaseUtils}
 import org.mongodb.scala.bson.ObjectId
+import org.mongodb.scala.bson.collection.immutable.Document
 import org.mongodb.scala.model.Filters._
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -27,23 +29,38 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
     //Ok(views.html.index())
   }
 
-  def getProducts(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+  def getProducts(): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
     val databaseHandler: DatabaseHandler = new DatabaseHandler(config)
-    databaseHandler.init()
-    val json = databaseHandler.get(null)
-    Ok(json)
+    databaseHandler.connect()
+    databaseHandler.init().flatMap(_ => {
+      databaseHandler.get().map((documents: Seq[Document]) => {
+        databaseHandler.close()
+        DatabaseUtils.convertToJson(documents)
+      }).map(json =>
+        Ok(json)
+      )
+    })
   }
 
-  def getProduct(id_string : String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+  def getProduct(id_string : String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
     val databaseHandler: DatabaseHandler = new DatabaseHandler(config)
     val objectId = new ObjectId(id_string)
-    val json: JsValue = databaseHandler.get(equal("_id", objectId))
-    Ok(json)
+    databaseHandler.connect()
+    databaseHandler.get(equal("_id", objectId)).map(( documents: Seq[Document]) => {
+      databaseHandler.close()
+      DatabaseUtils.convertToJson(documents)
+    } ).map( json =>
+      Ok(json)
+    )
   }
 
-  def addProduct(product : String):  Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+  def addProduct(product : String):  Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
     val databaseHandler: DatabaseHandler = new DatabaseHandler(config)
-    databaseHandler.add(product)
-    Ok
+    databaseHandler.connect()
+    databaseHandler.add(product).map(_ => {
+      databaseHandler.close()
+      Ok
+    })
   }
 }
+

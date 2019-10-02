@@ -9,7 +9,8 @@
 
     </li>
   </ul>
-
 <!--  Here some form to enter a bid, see https://angular.io/start/forms-->
+
+  <textarea [(ngModel)]='bid.value' (keyup)='editBid()' placeholder='Start typing...'></textarea>
 
 </div>

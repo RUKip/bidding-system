@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Settings } from './settings';
+import { Socket } from 'ngx-socket-io';
+import {Bid} from './bid';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +10,10 @@ import { Settings } from './settings';
 export class ProductService {
   http;
   settings;
-  constructor(http: HttpClient) {
+  currentBid = this.socket.fromEvent<Bid>('bid');
+  bids = this.socket.fromEvent<string[]>('bids');
+
+  constructor(http: HttpClient, private socket: Socket) {
     this.http = http;
     this.settings = new Settings();
   }
@@ -24,7 +29,8 @@ export class ProductService {
     return this.http.post(url);
   }
 
-  bid(productId, price) {
-    // Send request!
+  bid(bid) {
+    this.socket.emit('bid', bid);
+    // Send request! And catch in a MQ
   }
 }

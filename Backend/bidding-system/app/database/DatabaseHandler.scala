@@ -3,8 +3,7 @@ package database
 import java.util.concurrent.TimeUnit
 
 import org.mongodb.scala.bson.conversions.Bson
-import org.mongodb.scala.{Completed, Document, FindObservable, MongoClient, MongoCollection, MongoDatabase, Observer}
-import play.api.libs.json.{JsValue, Json}
+import org.mongodb.scala.{Completed, Document, MongoClient, MongoCollection, MongoDatabase, Observer}
 import play.api.Configuration
 
 import scala.concurrent.{Await, Future}
@@ -19,33 +18,14 @@ class DatabaseHandler (config: Configuration){
   var database : MongoDatabase = _
   var product_collection : MongoCollection[Document] = _
 
-  def get(filter : Bson) : JsValue = {
-    this.connect()
-
-    var json_string : String = "["
-    val result: FindObservable[Document] = {
+  def get(filter : Bson = null) : Future[Seq[Document]] = {
+    {
       if(filter == null) {
         product_collection.find()
       }else {
         product_collection.find(filter)
       }
-    }
-
-    //Wait for response to return
-    val documents = Await.result(result.toFuture(), Duration(MAX_WAIT_TIME, TimeUnit.SECONDS))
-    println(documents) //TODO: remove
-    for (doc <- documents) {
-      if (json_string == "[") {
-        json_string += doc.toJson()
-      }else {
-        json_string += "," + doc.toJson()
-      }
-    }
-    json_string += "]"
-
-    mongoClient.close()
-    println("Returning json: " + json_string)
-    Json.parse(json_string)
+    }.toFuture()
   }
 
   def delete(filter : Bson): Unit = {
@@ -54,18 +34,15 @@ class DatabaseHandler (config: Configuration){
     mongoClient.close()
   }
 
-  def add(json: String): Unit = {
+  def add(json: String): Future[Completed] = {
     val document: Document = Document(json)
-    this.connect()
     product_collection.insertOne(document).toFuture()
   }
 
-  def init(): Unit = {
-    val future: Future[Any] = Future {
-      this.connect()
-      val doc_count = Await.result(product_collection.countDocuments().toFuture(), Duration(MAX_WAIT_TIME, TimeUnit.SECONDS));
+  def init(): Future[Unit] = {
+    product_collection.countDocuments().toFuture().map(doc_count => {
       if (doc_count == 0) {
-          product_collection.insertMany(Array(
+        product_collection.insertMany(Array(
           Document("name" -> "magic 8 ball", "description" -> "it will tell your future", "keywords" -> "magic"),
           Document("name" -> "mysterybox", "description" -> "What could be in the box??", "keywords" -> "magic")
         )).subscribe(new Observer[Completed]() {
@@ -81,13 +58,32 @@ class DatabaseHandler (config: Configuration){
       }else{
         println("Collection already contains documents")
       }
-    }
-    val result = Await.result(future, Duration(MAX_WAIT_TIME, TimeUnit.SECONDS));
-    mongoClient.close()
-    result
+    })
+//
+//    val result: Future[Any] = Future {
+//      val doc_count = Await.result(product_collection.countDocuments().toFuture(), Duration(MAX_WAIT_TIME, TimeUnit.SECONDS));
+//      if (doc_count == 0) {
+//          product_collection.insertMany(Array(
+//          Document("name" -> "magic 8 ball", "description" -> "it will tell your future", "keywords" -> "magic"),
+//          Document("name" -> "mysterybox", "description" -> "What could be in the box??", "keywords" -> "magic")
+//        )).subscribe(new Observer[Completed]() {
+//          override def onNext(result: Completed): Unit = println("Inserted product successfully")
+//
+//          override def onError(e: Throwable): Unit = {
+//            println("error on init: " + e.getMessage)
+//            mongoClient.close()
+//          }
+//
+//          override def onComplete(): Unit = mongoClient.close()
+//        })
+//      }else{
+//        println("Collection already contains documents")
+//      }
+//    }
+//    result
   }
 
-  private def connect(): Unit =
+  def connect(): Unit =
   {
     try {
       this.mongoClient = MongoClient(config.get[String]("mongodb_client_location"))
@@ -97,4 +93,11 @@ class DatabaseHandler (config: Configuration){
       case ex:Exception => ex.getMessage()
     }
   }
+
+  def close(): Unit =
+    {
+      mongoClient.close()
+    }
+
+
 }

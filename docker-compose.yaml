@@ -11,4 +11,6 @@ services:
     user: "root"
   mongo:
     image: mongo:latest
+    deploy:
+      replicas: 1
  

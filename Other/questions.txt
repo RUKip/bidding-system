@@ -1,0 +1,10 @@
+#How to import rabbit mq using scala?
+Aparte container waar rabbit mq op runned. 
+https://github.com/NewMotion/akka-rabbitmq voor consumer/producer
+
+#How to create a replication set in MongoDB using the same hostname in docker?
+Create 3 seperate	
+
+#General feedback from pull request deadline 3
+
+

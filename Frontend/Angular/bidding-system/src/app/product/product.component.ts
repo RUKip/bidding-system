@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {ProductService} from '../product.service';
 import {Product} from '../product';
+import {Observable, Subscription} from 'rxjs';
+import {Bid} from '../bid';
+import {startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-product',
@@ -9,18 +12,22 @@ import {Product} from '../product';
   styleUrls: ['./product.component.css'],
   providers: [ProductService]
 })
-export class ProductComponent implements OnInit {
-  bids = [];
+export class ProductComponent implements OnInit, OnDestroy {
+  bids: Observable<string[]>;
+  currentBid: string;
   productId;
   product: Product;
-  constructor(private route: ActivatedRoute, private productSerivce: ProductService) { }
+  private bidSub: Subscription;
+  bid: Bid;
+
+  constructor(private route: ActivatedRoute, private productService: ProductService) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       this.productId = params.get('productId');
       console.log(this.productId);
 
-      this.productSerivce.getProductData(this.productId)
+      this.productService.getProductData(this.productId)
         .subscribe((data: JSON) => {
           console.log(data);
           const element = data[0];
@@ -32,9 +39,18 @@ export class ProductComponent implements OnInit {
         });
     });
 
-
     //TODO: get Bids by id on start, from the web socket
+    this.bidSub = this.productService.currentBid.pipe(
+      startWith({ id: '', value: 'Make a bid'})
+    ).subscribe(bid => this.currentBid = bid.id);
+  }
 
+  ngOnDestroy() {
+    this.bidSub.unsubscribe();
+  }
+
+  editBid() {
+    this.productService.bid(this.bid);
   }
 
 }
