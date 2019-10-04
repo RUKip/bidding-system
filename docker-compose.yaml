@@ -10,7 +10,21 @@ services:
     image: grkip/bidding-system:latest
     user: "root"
   mongo:
+    image: mongo_primary:latest
+    command: --wiredTigerCacheSizeGB 0.5 --bind_ip_all --replSet rs0
+  mongo-2:
     image: mongo:latest
-    deploy:
-      replicas: 1
- 
+    command: --wiredTigerCacheSizeGB 0.5 --bind_ip_all --replSet rs0
+  mongo-3:
+    image: mongo:latest
+    command: --wiredTigerCacheSizeGB 0.5 --bind_ip_all --replSet rs0
+  rsinit:
+    build:
+      context: ./2019_group_25_s2934833_s2756781_s3856046/Databases/Docker/
+    depends_on:
+      - mongo
+      - mongo-2
+      - mongo-3
+    entrypoint: ["sh", "-c", "init.sh"]
+  bid-mq:
+    image: rabbitmq:latest

@@ -1,7 +1,5 @@
-FROM mongo:latest
+FROM mongo
 
-COPY make_primary.sh /usr/local/bin/
+ADD init.sh /usr/local/bin/
 
-EXPOSE 27017
-CMD ["mongod"]
-# && /usr/local/bin/make_primary.sh"]
+RUN chmod +x /usr/local/bin/init.sh
