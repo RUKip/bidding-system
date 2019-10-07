@@ -2,7 +2,10 @@
   <div *ngIf="product">
     <h1>{{ product.name }}</h1>
   </div>
-
+  <div>
+    Description
+    <p>{{product.description}}</p>
+  </div>
   <h3>Latest bids:</h3>
   <ul>
     <li *ngFor="let bid of bids">

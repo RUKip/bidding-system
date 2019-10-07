@@ -17,6 +17,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 @Singleton
 class HomeController @Inject()(config: Configuration, cc: ControllerComponents) extends AbstractController(cc) {
 
+  val databaseHandler: DatabaseHandler = new DatabaseHandler(config)
+
   /**
    * Create an Action to render an HTML page.
    *
@@ -30,11 +32,8 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
   }
 
   def getProducts(): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-    val databaseHandler: DatabaseHandler = new DatabaseHandler(config)
-    databaseHandler.connect()
     databaseHandler.init().flatMap(_ => {
       databaseHandler.get().map((documents: Seq[Document]) => {
-        databaseHandler.close()
         DatabaseUtils.convertToJson(documents)
       }).map(json =>
         Ok(json)
@@ -43,11 +42,8 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
   }
 
   def getProduct(id_string : String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-    val databaseHandler: DatabaseHandler = new DatabaseHandler(config)
     val objectId = new ObjectId(id_string)
-    databaseHandler.connect()
     databaseHandler.get(equal("_id", objectId)).map(( documents: Seq[Document]) => {
-      databaseHandler.close()
       DatabaseUtils.convertToJson(documents)
     } ).map( json =>
       Ok(json)
@@ -55,10 +51,7 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
   }
 
   def addProduct(product : String):  Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-    val databaseHandler: DatabaseHandler = new DatabaseHandler(config)
-    databaseHandler.connect()
     databaseHandler.add(product).map(_ => {
-      databaseHandler.close()
       Ok
     })
   }

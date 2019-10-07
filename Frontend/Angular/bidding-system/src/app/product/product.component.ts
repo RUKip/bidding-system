@@ -5,6 +5,7 @@ import {Product} from '../product';
 import {Observable, Subscription} from 'rxjs';
 import {Bid} from '../bid';
 import {startWith} from 'rxjs/operators';
+import {BidService} from '../bid.service';
 
 @Component({
   selector: 'app-product',
@@ -20,7 +21,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   private bidSub: Subscription;
   bid: Bid;
 
-  constructor(private route: ActivatedRoute, private productService: ProductService) { }
+  constructor(private route: ActivatedRoute, private productService: ProductService, private bidService: BidService) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -40,7 +41,7 @@ export class ProductComponent implements OnInit, OnDestroy {
     });
 
     //TODO: get Bids by id on start, from the web socket
-    this.bidSub = this.productService.currentBid.pipe(
+    this.bidSub = this.bidService.currentBid.pipe(
       startWith({ id: '', value: 'Make a bid'})
     ).subscribe(bid => this.currentBid = bid.id);
   }
@@ -50,7 +51,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   editBid() {
-    this.productService.bid(this.bid);
+    this.bidService.bid(this.bid);
   }
 
 }
