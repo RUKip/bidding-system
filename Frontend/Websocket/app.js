@@ -11,13 +11,17 @@ io.on("connection", socket => {
     socket.join(currentId);
     previousId = currentId;
   };
+  
+  console.log('user joined');
 
   socket.on("getBid", bidId => {
     safeJoin(bidId);
     socket.emit("bid", bids[bidId]);
+    console.log()
   });
 
   socket.on("addBid", bid => {
+  console.log('adding bid');
     bids[bid.id] = bid;
     safeJoin(bid.id);
     io.emit("bids", Object.keys(bids));

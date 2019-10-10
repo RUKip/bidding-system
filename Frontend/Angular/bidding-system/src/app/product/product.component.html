@@ -14,6 +14,14 @@
   </ul>
 <!--  Here some form to enter a bid, see https://angular.io/start/forms-->
 
-  <textarea [(ngModel)]='bid.value' (keyup)='editBid()' placeholder='Start typing...'></textarea>
+  <form [formGroup]="bidForm" (ngSubmit)="onSubmit(bidForm.value)">
+    <div>
+      <label for="price">
+        Price
+      </label>
+      <input id="price" type="number" formControlName="price">
+    </div>
+    <button class="button" type="submit">Bid</button>
 
+  </form>
 </div>

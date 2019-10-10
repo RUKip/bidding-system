@@ -1,4 +1,4 @@
 export class Bid {
-  id: string;
-  value: string;
+  productId: string;
+  price: string;
 }
