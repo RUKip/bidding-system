@@ -12,3 +12,5 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 # Get products from database
 GET     /api/products               controllers.HomeController.getProducts
 GET     /api/product/:id            controllers.HomeController.getProduct(id)
+
+POST    /api/product/:product        controllers.HomeController.addProduct(product)

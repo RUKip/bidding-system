@@ -13,6 +13,10 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { ProductComponent } from './product/product.component';
 import {ProductService} from './product.service';
 import {ProductsService} from './products.service';
+import { SellComponent } from './sell/sell.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { SocketIoModule } from 'ngx-socket-io';
+import {Settings} from './settings';
 
 @NgModule({
   declarations: [
@@ -21,18 +25,23 @@ import {ProductsService} from './products.service';
     AdminComponent,
     MainComponent,
     ProductComponent,
+    SellComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    ReactiveFormsModule,
     RouterModule.forRoot([
-      { path: '', component: MainComponent },
-      { path: 'admin', component: AdminComponent },
-      { path: 'product/:productId', component: ProductComponent },
-      ]),
+      {path: '', component: MainComponent},
+      {path: 'admin', component: AdminComponent},
+      {path: 'product/:productId', component: ProductComponent},
+      {path: 'sell', component: SellComponent},
+    ]),
     BsDropdownModule.forRoot(),
     TooltipModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    SocketIoModule.forRoot((new Settings()).socketConfig),
+    FormsModule
   ],
   providers: [
     ProductService,

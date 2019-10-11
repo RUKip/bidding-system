@@ -8,6 +8,7 @@ import { Settings } from './settings';
 export class ProductService {
   http;
   settings;
+
   constructor(http: HttpClient) {
     this.http = http;
     this.settings = new Settings();
@@ -19,7 +20,8 @@ export class ProductService {
     return this.http.get(url);
   }
 
-  bid(productId, price) {
-    // Send request!
+  createProduct(product: string) {
+    const url: string = 'http://' + this.settings.defaultUrl + '/api/product/' + product;
+    return this.http.post(url);
   }
 }

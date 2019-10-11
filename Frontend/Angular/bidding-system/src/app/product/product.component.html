@@ -2,14 +2,26 @@
   <div *ngIf="product">
     <h1>{{ product.name }}</h1>
   </div>
-
+  <div>
+    Description
+    <p>{{product.description}}</p>
+  </div>
   <h3>Latest bids:</h3>
   <ul>
     <li *ngFor="let bid of bids">
 
     </li>
   </ul>
-
 <!--  Here some form to enter a bid, see https://angular.io/start/forms-->
 
+  <form [formGroup]="bidForm" (ngSubmit)="onSubmit(bidForm.value)">
+    <div>
+      <label for="price">
+        Price
+      </label>
+      <input id="price" type="number" formControlName="price">
+    </div>
+    <button class="button" type="submit">Bid</button>
+
+  </form>
 </div>

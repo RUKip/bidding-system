@@ -3,12 +3,29 @@ services:
   frontend:
     image: grkip/bidding-frontend:latest
     deploy:
-      replicas: 1
+      replicas: 3
     ports:
       - "80:80"
   backend:
     image: grkip/bidding-system:latest
+    deploy:
+     replicas: 3
     user: "root"
   mongo:
+    image: grkip/mongo_primary:latest
+    command: --wiredTigerCacheSizeGB 0.5 --bind_ip_all --replSet rs0
+  mongo-2:
     image: mongo:latest
- 
+    command: --wiredTigerCacheSizeGB 0.5 --bind_ip_all --replSet rs0
+  mongo-3:
+    image: mongo:latest
+    command: --wiredTigerCacheSizeGB 0.5 --bind_ip_all --replSet rs0
+  rsinit:
+    image: grkip/db-init:latest
+    depends_on:
+      - mongo
+      - mongo-2
+      - mongo-3
+    entrypoint: ["sh", "-c", "init.sh"]
+  bid-mq:
+    image: rabbitmq:latest
