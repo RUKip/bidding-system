@@ -10,7 +10,7 @@ object DatabaseUtils {
   def convertToJson(documents: Seq[Document]): JsValue =
   {
     var json_string : String = "["
-    for (doc <- documents) {
+    documents.foreach{ doc: Document =>
       if (json_string == "[") {
         json_string += doc.toJson()
       }else {
