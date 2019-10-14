@@ -9,16 +9,11 @@ object DatabaseUtils {
 
   def convertToJson(documents: Seq[Document]): JsValue =
   {
-    var json_string : String = "["
-    documents.foreach{ doc: Document =>
-      if (json_string == "[") {
-        json_string += doc.toJson()
-      }else {
-        json_string += "," + doc.toJson()
-      }
-    }
-    json_string += "]"
-    Json.parse(json_string)
+    Json.parse(
+     documents.map( doc => {
+        doc.toJson()
+      }).mkString("[", ",", "]")
+    )
   }
 
   def createAndFilter(options: Map[String, Any]): Bson = {

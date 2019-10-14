@@ -35,7 +35,7 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents)(
     //Ok(views.html.index())
   }
 
-  def getProducts(): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
+  def getProducts: Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
     databaseHandler.init().flatMap(_ => {
       databaseHandler.get().map((documents: Seq[Document]) => {
         DatabaseUtils.convertToJson(documents)
