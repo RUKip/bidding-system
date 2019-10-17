@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {ProductService} from '../product.service';
 import {Product} from '../product';
-import {Observable, Subscription} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Bid} from '../bid';
 import {BidService} from '../bid.service';
 import {FormBuilder} from '@angular/forms';
@@ -18,7 +18,6 @@ export class ProductComponent implements OnInit, OnDestroy {
   currentProduct: Product;
   productId: string;
   product: Product;
-  private bidSub: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -43,17 +42,13 @@ export class ProductComponent implements OnInit, OnDestroy {
           };
         });
     });
-
-    //TODO: get Bids by id on start, from the web socket
-    this.bidSub = this.bidService.currentProduct.subscribe(product => this.currentProduct = product);
-
     this.bidForm = this.formBuilder.group({
       price: '0'
     });
   }
 
   ngOnDestroy() {
-    this.bidSub.unsubscribe();
+    this.bidService.socket.close();
   }
 
   makeBid(bid) {

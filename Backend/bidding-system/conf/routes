@@ -13,4 +13,6 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 GET     /api/products               controllers.HomeController.getProducts
 GET     /api/product/:id            controllers.HomeController.getProduct(id)
 
-POST    /api/product/:product        controllers.HomeController.addProduct(product)
+POST    /api/product/:product       controllers.HomeController.addProduct(product)
+
+GET     /api/bid/                   controllers.HomeController.bidSocket

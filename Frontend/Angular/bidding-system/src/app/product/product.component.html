@@ -2,8 +2,8 @@
   <div *ngIf="product">
     <h1>{{ product.name }}</h1>
   </div>
-  <div>
-    Description
+  <div *ngIf="product">
+    <h3>Description:</h3>
     <p>{{product.description}}</p>
   </div>
   <h3>Latest bids:</h3>

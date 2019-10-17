@@ -15,8 +15,6 @@ import {ProductService} from './product.service';
 import {ProductsService} from './products.service';
 import { SellComponent } from './sell/sell.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { SocketIoModule } from 'ngx-socket-io';
-import {Settings} from './settings';
 
 @NgModule({
   declarations: [
@@ -40,7 +38,6 @@ import {Settings} from './settings';
     BsDropdownModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
-    SocketIoModule.forRoot((new Settings()).socketConfig),
     FormsModule
   ],
   providers: [

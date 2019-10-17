@@ -1,20 +1,27 @@
 import { Injectable } from '@angular/core';
 import {Bid} from './bid';
-import { Socket } from 'ngx-socket-io';
-import {Product} from './product';
+import {Settings} from './settings';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BidService {
 
-  currentProduct = this.socket.fromEvent<Product>('product');
-  bids = this.socket.fromEvent<Bid[]>('bids');
+  socket;
+  bids: Bid[] = [];
+  settings: Settings;
 
-  constructor(private socket: Socket) { }
+  constructor() {
+    this.settings = new Settings();
+    this.socket = new WebSocket('ws://' + this.settings.defaultUrl + '/api/bid/');
+
+    // Listen for messages
+    this.socket.addEventListener('message', function(event) {
+      console.log(JSON.parse(event));
+    });
+  }
 
   bid(bid) {
-    this.socket.emit('bid', JSON.stringify(bid));
-    // Send request! Backend posts it in MQ to share over replicas
+    this.socket.send(JSON.stringify(bid));
   }
 }
