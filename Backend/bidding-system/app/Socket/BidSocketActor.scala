@@ -15,12 +15,14 @@ class BidSocketActor(out: ActorRef) extends Actor {
   def receive: PartialFunction[Any, Unit] = {
     case json: String =>
       val productjson = Json.parse(json)
-      val product_id = productjson.get("product").toString
+      val product_id = productjson.get("productId").toString
       val price = productjson.get("price").intValue()
       if(product_id != this.product_id){
+        println("Setting bids")
         this.product_id = product_id
         this.bids = Seq(1, 2, 5)//TODO: init from db
       }
+      println(Json.toJson(bids))
       this.bidPrice(product_id, price)
       val send = Json.stringify(Json.toJson(bids))
       println("Sending: " + send)
