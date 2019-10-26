@@ -1,0 +1,83 @@
+version: "3"
+services:
+  frontend:
+    image: bidding-frontend:latest
+    deploy:
+      replicas: 3
+    ports:
+      - "80:80"
+  backend:
+    image: bidding-system:1.0-SNAPSHOT
+    deploy:
+     replicas: 3
+    user: "root"
+  mongo:
+    image: mongo:latest
+    command: --wiredTigerCacheSizeGB 0.5 --bind_ip_all --port 27017 --replSet rs0 --shardsvr
+    environment:
+     TERM: xterm
+  mongo-2:
+    image: mongo:latest
+    command: --wiredTigerCacheSizeGB 0.5 --bind_ip_all --port 27017 --replSet rs0 --shardsvr
+    environment:
+     TERM: xterm
+  mongo-3:
+    image: mongo:latest
+    command: --wiredTigerCacheSizeGB 0.5 --bind_ip_all --port 27017 --replSet rs0 --shardsvr
+    environment:
+     TERM: xterm
+  mongoconf1:
+    image: mongo
+    command: mongod --configsvr --replSet conf0 --port 27017 --bind_ip_all
+    expose:
+      - "27017"
+    environment:
+     TERM: xterm
+  mongoconf2:
+    image: mongo
+    command: mongod --configsvr --replSet conf0 --port 27017 --bind_ip_all
+    expose:
+      - "27017"
+    environment:
+     TERM: xterm
+  mongoconf3:
+    image: mongo
+    command: mongod --configsvr --replSet conf0 --port 27017 --bind_ip_all
+    expose:
+      - "27017"
+    environment:
+     TERM: xterm
+  mongos1:
+    image: mongo
+    depends_on:
+      - mongoconf1
+      - mongoconf2
+      - mongoconf3
+    command: mongos --configdb conf0/mongoconf1:27017,mongoconf2:27017,mongoconf3:27017 --port 27017 --bind_ip_all
+    expose:
+      - "27017"
+  mongos2:
+    image: mongo
+    depends_on:
+      - mongoconf1
+      - mongoconf2
+      - mongoconf3
+    command: mongos --configdb conf0/mongoconf1:27017,mongoconf2:27017,mongoconf3:27017 --port 27017 --bind_ip_all
+    expose:
+      - "27017"
+  rsinit:
+    image: db-init:latest
+    depends_on:
+      - mongo
+      - mongo-2
+      - mongo-3
+    entrypoint: ["sh", "-c", "init.sh"]
+  confinit:
+    image: conf-init:latest
+    depends_on:
+      - mongoconf1
+      - mongoconf2
+      - mongoconf3
+    entrypoint: ["sh", "-c", "init.sh"]
+  bid-mq:
+    image: rabbitmq:latest
