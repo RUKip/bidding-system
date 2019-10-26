@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {ProductService} from '../product.service';
 import {Product} from '../product';
-import {Observable} from 'rxjs';
 import {Bid} from '../bid';
 import {BidService} from '../bid.service';
 import {FormBuilder} from '@angular/forms';
@@ -14,8 +13,7 @@ import {FormBuilder} from '@angular/forms';
   providers: [ProductService]
 })
 export class ProductComponent implements OnInit, OnDestroy {
-  bids: Observable<Bid[]>;
-  currentProduct: Product;
+  bids: number[];
   productId: string;
   product: Product;
 
@@ -29,8 +27,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       this.productId = params.get('productId');
-      console.log(this.productId);
-
+      this.bidService.currentBids.subscribe(bids => this.bids = bids);
       this.productService.getProductData(this.productId)
         .subscribe((data: JSON) => {
           console.log(data);
@@ -55,8 +52,9 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.bidService.bid(bid);
   }
 
-  onSubmit(price) {
-    const bid: Bid = { productId: this.productId, price };
+  onSubmit(value) {
+    const bidValue: string = value.price.toString();
+    const bid: Bid = {productId: this.productId, price: bidValue};
     this.makeBid(bid);
     this.bidForm.reset();
   }

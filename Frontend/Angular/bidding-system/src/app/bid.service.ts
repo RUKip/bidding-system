@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import {Bid} from './bid';
 import {Settings} from './settings';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BidService {
 
+  private bids = new BehaviorSubject([]);
+  currentBids = this.bids.asObservable();
   socket;
-  bids: Bid[] = [];
   settings: Settings;
 
   constructor() {
@@ -16,8 +17,16 @@ export class BidService {
     this.socket = new WebSocket('ws://' + this.settings.defaultUrl + '/api/bid/');
 
     // Listen for messages
-    this.socket.addEventListener('message', function(event) {
-      console.log(JSON.parse(event));
+    this.socket.addEventListener('message', (event) => {
+      const data = JSON.parse(event.data);
+      console.log(data);
+      const bids = data['bids'];
+      let list = [];
+      for (const bid of bids) {
+        console.log('now at: ' + bid);
+        list.push(bid);
+      }
+      this.bids.next(list);
     });
   }
 

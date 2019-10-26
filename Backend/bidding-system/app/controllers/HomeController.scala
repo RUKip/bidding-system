@@ -61,7 +61,6 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents)(
   }
 
   def bidSocket = WebSocket.accept[String, String] { request =>
-    println("got the connection")
     ActorFlow.actorRef { out =>
       BidSocketActor.props(out)
     }
