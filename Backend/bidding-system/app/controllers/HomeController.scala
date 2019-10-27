@@ -1,6 +1,6 @@
 package controllers
 
-import Socket.BidSocketActor
+import Socket.{BidSocketActor, StorageActor}
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import javax.inject._
@@ -62,7 +62,7 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents)(
 
   def bidSocket = WebSocket.accept[String, String] { request =>
     ActorFlow.actorRef { out =>
-      BidSocketActor.props(out)
+      StorageActor.connect(out)
     }
   }
 }
