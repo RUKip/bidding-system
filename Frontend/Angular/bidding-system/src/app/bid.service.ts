@@ -23,7 +23,6 @@ export class BidService {
       const bids = data['bids'];
       let list = [];
       for (const bid of bids) {
-        console.log('now at: ' + bid);
         list.push(bid);
       }
       this.bids.next(list);

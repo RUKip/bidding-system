@@ -1,6 +1,6 @@
 package controllers
 
-import Socket.{BidSocketActor, StorageActor}
+import Socket.StorageActor
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import javax.inject._

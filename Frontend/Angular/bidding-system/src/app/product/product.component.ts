@@ -24,6 +24,7 @@ export class ProductComponent implements OnInit, OnDestroy {
     private bidService: BidService) { }
 
     bidForm;
+
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       this.productId = params.get('productId');
@@ -45,7 +46,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.bidService.socket.close();
+    // this.bidService.socket.close();
   }
 
   makeBid(bid) {
