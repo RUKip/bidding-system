@@ -1,8 +1,5 @@
 package controllers
 
-import Socket.BidSocketActor
-import akka.actor.ActorSystem
-import akka.stream.Materializer
 import javax.inject._
 import play.api._
 import play.api.mvc._
@@ -10,7 +7,6 @@ import database.{DatabaseHandler, DatabaseUtils}
 import org.mongodb.scala.bson.ObjectId
 import org.mongodb.scala.bson.collection.immutable.Document
 import org.mongodb.scala.model.Filters._
-import play.api.libs.streams.ActorFlow
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -19,7 +15,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(config: Configuration, cc: ControllerComponents)(implicit system: ActorSystem, mat: Materializer) extends AbstractController(cc) {
+class HomeController @Inject()(config: Configuration, cc: ControllerComponents) extends AbstractController(cc) {
 
   val databaseHandler: DatabaseHandler = new DatabaseHandler(config)
 
