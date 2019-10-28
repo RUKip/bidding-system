@@ -12,19 +12,38 @@ class BidSocketActor(out: ActorRef) extends Actor {
 
   def receive: PartialFunction[Any, Unit] = {
     case json: String =>
+      println("Received message: " + json)
       val productJson = Json.parse(json)
-      val product_id = productJson("productId").as[String]
-      val price = productJson("price").as[String]
-      if(StorageActor.actors(out) != product_id) {
-        StorageActor.actors += (out -> product_id)
+      if((productJson \ "init").asOpt[String].isDefined) {
+        this.initProduct(productJson("init").as[String])
+      } else {
+        val product_id = productJson("productId").as[String]
+        val price = productJson("price").as[String]
+        //TODO: check bid before accepting
+        this.acceptBid(product_id, price)
       }
-      if(StorageActor.bids.get(product_id).isEmpty) {
-        StorageActor.bids(product_id) = Seq(1, 2, 5) //TODO: init from db (with timestamps!)
-      }
-      this.bidPrice(product_id, price.toInt)
-      val send = Json.stringify(DatabaseUtils.convertBidsToJson(StorageActor.bids(StorageActor.actors(out))))
-      println("Sending: " + send) //TODO: debug/log remove later
-      broadcast(send)
+  }
+
+  def initProduct(productId: String): Unit =
+  {
+    StorageActor.actors += (out -> productId)
+    if (StorageActor.bids.get(productId).isEmpty) {
+      StorageActor.bids(productId) = Seq(1, 2, 5) //TODO: init from db (with timestamps!)
+    }
+    val send = Json.stringify(DatabaseUtils.convertBidsToJson(StorageActor.bids(StorageActor.actors(out))))
+    println("Initializing actor, sending: " + send)
+    out ! send
+  }
+
+  def acceptBid(productId: String, price: String): Unit =
+  {
+    if (StorageActor.actors(out) != productId) {
+      StorageActor.actors += (out -> productId)
+    }
+    this.bidPrice(productId, price.toInt)
+    val send = Json.stringify(DatabaseUtils.convertBidsToJson(StorageActor.bids(StorageActor.actors(out))))
+    println("Sending: " + send)
+    broadcast(send)
   }
 
   def bidPrice(product_id : String, price : Int) = {

@@ -43,10 +43,15 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.bidForm = this.formBuilder.group({
       price: '0'
     });
+
+    this.bidService.socket.addEventListener('open', event => {
+        this.bidService.socket.send('{"init":"' + this.productId + '"}');
+    }
+    );
   }
 
   ngOnDestroy() {
-    // this.bidService.socket.close();
+    this.bidService.socket.close();
   }
 
   makeBid(bid) {
